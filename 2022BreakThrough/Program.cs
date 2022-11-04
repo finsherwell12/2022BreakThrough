@@ -78,6 +78,7 @@ namespace Breakthrough
                                         MoveCard(Hand, Discard, Hand.GetCardNumberAt(CardChoice - 1));
                                         GetCardFromDeck(CardChoice);
                                         Console.WriteLine("Cards left in the deck: " + Deck.GetNumberOfCards());
+                                        break;
                                     }
                                     else if (DiscardOrPlay == "P")
                                         PlayCardToSequence(CardChoice);
@@ -86,7 +87,14 @@ namespace Breakthrough
                                 }
                             case "P":
                                 {
-                                    Console.WriteLine();
+                                    if (AllowedPeek())
+                                    {
+                                        Console.WriteLine(PeekDeck());
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Not allowed peek.");
+                                    }
                                     break;
                                 }
                         }
@@ -176,6 +184,17 @@ namespace Breakthrough
                 Console.WriteLine();
                 Score += 5;
             }
+        }
+
+        private bool AllowedPeek()
+        {
+            bool allowed = true;
+            return allowed;
+        }
+
+        private Lock PeekDeck()
+        {
+            
         }
 
         private bool CheckIfLockChallengeMet()
