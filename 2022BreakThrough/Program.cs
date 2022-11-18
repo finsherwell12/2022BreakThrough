@@ -87,14 +87,7 @@ namespace Breakthrough
                                 }
                             case "P":
                                 {
-                                    if (AllowedPeek())
-                                    {
-                                        Console.WriteLine(PeekDeck());
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine("Not allowed peek.");
-                                    }
+                                    
                                     break;
                                 }
                         }
@@ -171,6 +164,13 @@ namespace Breakthrough
                     Score += MoveCard(Hand, Sequence, Hand.GetCardNumberAt(cardChoice - 1));
                     GetCardFromDeck(cardChoice);
                 }
+                
+                else 
+                {
+                    Console.WriteLine("You cannot play the same type of card!");
+                    Console.WriteLine("You tried to play ", Hand.GetCardDescriptionAt(cardChoice));
+                }
+                 
             }
             else
             {
@@ -184,17 +184,6 @@ namespace Breakthrough
                 Console.WriteLine();
                 Score += 5;
             }
-        }
-
-        private bool AllowedPeek()
-        {
-            bool allowed = true;
-            return allowed;
-        }
-
-        private Lock PeekDeck()
-        {
-            
         }
 
         private bool CheckIfLockChallengeMet()
@@ -391,10 +380,17 @@ namespace Breakthrough
             return Choice;
         }
 
-        private string GetChoice()
+        private string GetChoice(Lock L)
         {
             Console.WriteLine();
-            Console.Write("(D)iscard inspect, (U)se card, (P)eak into deck:> ");
+            if (L.PeakUsed == false)
+            {
+                Console.Write("(D)iscard inspect, (U)se card, (P)eak into deck:> ");
+            }
+            else
+            {
+                Console.Write("(D)iscard inspect, (U)se card:> ");
+            }
             string Choice = Console.ReadLine().ToUpper();
             return Choice;
         }
@@ -494,6 +490,14 @@ namespace Breakthrough
     class Lock
     {
         protected List<Challenge> Challenges = new List<Challenge>();
+        private bool peakUsed = false;
+        
+        public bool PeakUsed
+        {
+            get { return peakUsed; }
+            set { peakUsed = value; }
+        }
+            
 
         public virtual void AddChallenge(List<string> condition)
         {
