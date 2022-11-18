@@ -1,4 +1,4 @@
-﻿// Skeleton Program code for the AQA A Level Paper 1 Summer 2022 examination
+// Skeleton Program code for the AQA A Level Paper 1 Summer 2022 examination
 //this code should be used in conjunction with the Preliminary Material
 //written by the AQA Programmer Team
 //developed in the Visual Studio Community Edition programming environment
@@ -61,7 +61,7 @@ namespace Breakthrough
                         Console.WriteLine(CurrentLock.GetLockDetails());
                         Console.WriteLine(Sequence.GetCardDisplay());
                         Console.WriteLine(Hand.GetCardDisplay());
-                        MenuChoice = GetChoice();
+                        MenuChoice = GetChoice(CurrentLock);
                         switch (MenuChoice)
                         {
                             case "D":
@@ -380,10 +380,10 @@ namespace Breakthrough
             return Choice;
         }
 
-        private string GetChoice(Lock L)
+        private string GetChoice(Lock l)
         {
             Console.WriteLine();
-            if (L.PeakUsed == false)
+            if (l.PeakUsed == false)
             {
                 Console.Write("(D)iscard inspect, (U)se card, (P)eak into deck:> ");
             }
@@ -728,6 +728,45 @@ namespace Breakthrough
         public CardCollection(string n)
         {
             Name = n;
+        }
+
+        public void getCardStats(bool difficulty)
+        {
+            int remainingFiles = 0;
+            int remainingKeys = 0;
+            int remainingPicks = 0;
+            int totalDeck = 0;
+
+            for (int x = 0; x < Cards.Count; x++)
+            {
+                if (Cards[x].GetDescription() == "F")
+                {
+                    remainingFiles += 1;
+                    totalDeck += 1;
+                }
+
+                else if (Cards[x].GetDescription() == "K")
+                {
+                    remainingKeys += 1;
+                    totalDeck += 1;
+                }
+
+                else if (Cards[x].GetDescription() == "P")
+                {
+                    remainingPicks += 1;
+                    totalDeck += 1;
+                }
+            }
+
+            if (difficulty)
+            {
+                Console.WriteLine("Currently in the Deck, there is a ",
+                Math.Round(Convert.ToDecimal(remainingFiles / totalDeck)), "% chance of getting a File");
+                Console.WriteLine("Currently in the Deck, there is a ",
+                Math.Round(Convert.ToDecimal(remainingKeys / totalDeck)), "% chance of getting a Key");
+                Console.WriteLine("Currently in the Deck, there is a ",
+                Math.Round(Convert.ToDecimal(remainingPicks / totalDeck)), "% chance of getting a Pick");
+            }
         }
 
         public string GetName()
