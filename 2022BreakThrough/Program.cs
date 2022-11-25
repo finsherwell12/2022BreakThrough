@@ -32,6 +32,9 @@ namespace Breakthrough
         private bool GameOver;
         private Lock CurrentLock;
         private bool LockSolved;
+        private int bonusCounter;
+        private int credits;
+        private ToolCard[] stock;
 
         public Breakthrough()
         {
@@ -41,6 +44,19 @@ namespace Breakthrough
             Discard = new CardCollection("DISCARD");
             Score = 0;
             LoadLocks();
+            bonusCounter = 20;
+            credits = 10;
+            stock = new ToolCard[9];
+
+            stock[0] = new ToolCard("F", "a");
+            stock[1] = new ToolCard("F", "b");
+            stock[2] = new ToolCard("F", "c");
+            stock[3] = new ToolCard("P", "a");
+            stock[4] = new ToolCard("P", "b");
+            stock[5] = new ToolCard("P", "c");
+            stock[6] = new ToolCard("K", "a");
+            stock[7] = new ToolCard("K", "b");
+            stock[8] = new ToolCard("K", "c");
         }
 
         public void PlayGame()
@@ -78,11 +94,27 @@ namespace Breakthrough
                                         MoveCard(Hand, Discard, Hand.GetCardNumberAt(CardChoice - 1));
                                         GetCardFromDeck(CardChoice);
                                         Console.WriteLine("Cards left in the deck: " + Deck.GetNumberOfCards());
-                                        break;
                                     }
                                     else if (DiscardOrPlay == "P")
                                         PlayCardToSequence(CardChoice);
                                         Console.WriteLine("Cards left in the deck: " + Deck.GetNumberOfCards());
+
+                                    if (credits > 2)
+                                    {
+                                        Console.WriteLine("(B)uy a card:");
+                                        string buyChoice = Console.ReadLine().ToUpper();
+
+                                        if (buyChoice == "B")
+                                        {
+
+                                        }
+
+                                        else
+                                        {
+                                            
+                                        }
+                                    }
+
                                     break;
                                 }
                             case "P":
@@ -104,16 +136,43 @@ namespace Breakthrough
                 Console.WriteLine("No locks in file.");
         }
 
+        private void openShop()
+        {
+            for (int i = 0; i < stock.Length; i++)
+            {
+                if (stock[i] != null)
+                {
+                    Console.WriteLine(Convert.ToString(i), ". ", stock[i].GetDescription(), " (1 available)");
+                }
+                else
+                {
+                    Console.WriteLine("(0 available)");
+                }
+            }
+
+            Console.WriteLine("10. No Tool (buy nothing");
+
+
+        }
+
         private void ProcessLockSolved()
         {
             Score += 10;
+            if (bonusCounter > 0)
+            {
+                Score += bonusCounter;
+            }
+
             Console.WriteLine("Lock has been solved.  Your score is now: " + Score);
+            Console.WriteLine("You have been awarded: " + bonusCounter + " bonus counters!");
             while (Discard.GetNumberOfCards() > 0)
             {
                 MoveCard(Discard, Deck, Discard.GetCardNumberAt(0));
             }
             Deck.Shuffle();
             CurrentLock = GetRandomLock();
+
+            bonusCounter = 20;
         }
 
         private bool CheckIfPlayerHasLost()
@@ -163,6 +222,7 @@ namespace Breakthrough
                 {
                     Score += MoveCard(Hand, Sequence, Hand.GetCardNumberAt(cardChoice - 1));
                     GetCardFromDeck(cardChoice);
+                    bonusCounter = bonusCounter - 1;
                 }
                 
                 else 
@@ -176,6 +236,7 @@ namespace Breakthrough
             {
                 Score += MoveCard(Hand, Sequence, Hand.GetCardNumberAt(cardChoice - 1));
                 GetCardFromDeck(cardChoice);
+                bonusCounter = bonusCounter - 1;
             }
             if (CheckIfLockChallengeMet())
             {
