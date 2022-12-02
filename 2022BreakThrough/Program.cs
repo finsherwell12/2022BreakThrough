@@ -35,7 +35,8 @@ namespace Breakthrough
         private bool LockSolved;
         private int bonusCounter;
         private int credits;
-        private ToolCard[] stock;
+        private int[] stock;
+        private ToolCard[] stockIndicator;
 
         public Breakthrough()
         {
@@ -47,17 +48,23 @@ namespace Breakthrough
             LoadLocks();
             bonusCounter = 20;
             credits = 10;
-            stock = new ToolCard[9];
+            stock = new int[9];
+            stockIndicator = new ToolCard[9];
 
-            stock[0] = new ToolCard("F", "a");
-            stock[1] = new ToolCard("F", "b");
-            stock[2] = new ToolCard("F", "c");
-            stock[3] = new ToolCard("P", "a");
-            stock[4] = new ToolCard("P", "b");
-            stock[5] = new ToolCard("P", "c");
-            stock[6] = new ToolCard("K", "a");
-            stock[7] = new ToolCard("K", "b");
-            stock[8] = new ToolCard("K", "c");
+            stock[0] = 1;
+            stock[1] = 1;
+            stock[2] = 1;
+            stock[3] = 1;
+            stock[4] = 1;
+            stock[5] = 1;
+            stock[6] = 1;
+            stock[7] = 1;
+            stock[8] = 1;
+        }
+
+        public void updateStock(Card t)
+        {
+            
         }
 
         public void PlayGame()
@@ -107,6 +114,10 @@ namespace Breakthrough
 
                                         if (buyChoice == "B")
                                         {
+                                            openShop();
+                                            int choice = Convert.ToInt32(Console.ReadLine());
+
+
 
                                         }
 
@@ -141,19 +152,21 @@ namespace Breakthrough
         {
             for (int i = 0; i < stock.Length; i++)
             {
-                if (stock[i] != null)
+                if (stock[i] != 0)
                 {
-                    Console.WriteLine(Convert.ToString(i), ". ", stock[i].GetDescription(), " (1 available)");
+                    Console.WriteLine(Convert.ToString(i), ". ", stockIndicator[i].GetDescription(), " (1 available)");
                 }
                 else
                 {
-                    Console.WriteLine("(0 available)");
+                    Console.WriteLine(Convert.ToString(i), ". ", stockIndicator[i].GetDescription(), "(0 available)");
                 }
             }
-
             Console.WriteLine("10. No Tool (buy nothing");
+        }
 
-
+        private void getCardPurchasePosition(Card c)
+        {
+            
         }
 
         private void ProcessLockSolved()
@@ -946,6 +959,37 @@ namespace Breakthrough
                 CardDisplay += LineOfDashes + Environment.NewLine;
             }
             return CardDisplay;
+        }
+
+        private int getCardTypeCount(Card c)
+        {
+            int cardCount = 0;
+            foreach(ToolCard card in Cards)
+            {
+                if (card.GetDescription() == c.GetDescription())
+                {
+                    cardCount++;
+                }
+            }
+            return cardCount;
+        }
+
+        private int getCardPosition(Card c)
+        {
+            int cardPosition = 0;
+            foreach (Card card in Cards)
+            {
+                while (c.GetDescription() != card.GetDescription() && cardPosition < Cards.Count)
+                {
+                    cardPosition++;
+                }
+
+                if (c.GetDescription() == card.GetDescription())
+                {
+                    cardPosition--;
+                }
+            }
+            return cardPosition;
         }
     }
 }
